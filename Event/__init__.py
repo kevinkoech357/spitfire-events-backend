@@ -11,7 +11,11 @@ from flask_session import Session
 from flask import Flask, session
 from flask_cors import CORS
 from Event.config import App_Config
+from flasgger import Swagger
+import yaml
 
+# Create an instance of Swagger
+swagger = Swagger()
 
 db = SQLAlchemy()
 
@@ -39,6 +43,13 @@ def create_app():
     # initialize Flask-Session
     sess.init_app(app)
 
+    # Load Swagger content from the file
+    with open('auth_swagger.yaml', 'r') as file:
+        swagger_config = yaml.load(file, Loader=yaml.FullLoader)
+
+    # Initialize Flasgger with the loaded Swagger configuration
+    Swagger(app, template=swagger_config)
+
     # register endpoint(blueprints)
     # pylint: disable=import-outside-toplevel
     from Event.user.routes import users
@@ -47,6 +58,7 @@ def create_app():
     from Event.errors.handlers import error
     from Event.groups.routes import groups
     from Event.comments.routes import comments
+    # from Event.likes.routes import likes
 
     app.register_blueprint(users)
     app.register_blueprint(auth)
@@ -54,6 +66,7 @@ def create_app():
     app.register_blueprint(groups)
     app.register_blueprint(error)
     app.register_blueprint(comments)
+    # app.register_blueprint(likes)
 
     # create db tables from models if not exists
     with app.app_context():

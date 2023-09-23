@@ -5,31 +5,31 @@ Module for removing user from a group.
 from flask import Blueprint, jsonify, request
 from Event.models.users import Users
 from Event.models.groups import Groups
-from Event.models.user_groups import UserGroups
 from Event import db
+from Event.utils import query_one_filtered
 
 
 groups = Blueprint("groups", __name__, url_prefix="/api/groups")
 
-@groups.route("/<groupId>/members/<userId>",methods=["POST"])
+@groups.route("/<string:groupId>/members/<string:userId>",methods=["POST"])
 def add_user_to_group(groupId, userId):
     try:
-        group_id = Users.query.get(groupId)
-        user_id = Groups.query.get(userId)
+        group = query_one_filtered(Groups,id=groupId)
+        user = query_one_filtered(Users,id=userId)
 
         # Check if the group and user exist
-        if group_id is None or user_id is None:
+        if group is None or user is None:
             return jsonify({"error": "Group or user not found"}), 404
 
-        # Check if the user is a member of the group
-        if user_id not in group_id.members:
-            return jsonify({"error": "User is not a member of the group"}), 400
+        newgroup=user.user_groups
+        if group.id in [group.id for group in newgroup ]:
+            return jsonify({"error":"forbidden","message":"User already in group"}),403
+        newgroup.append(group)
 
-
-        add_user = UserGroups(user_id=user_id, group_id=group_id)
-        UserGroups.insert(add_user)
+        user.user_groups=newgroup
+        user.update()
         
-        return jsonify({"success": True, "id": add_user.id, "message": "User added to Group"}), 201
+        return jsonify({ "id": group.id, "message": "User added to Group"}), 201
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
@@ -46,11 +46,11 @@ def get_group_by_id(group_id):
         dict: A JSON response with group details.
     """
     try:
-        group = Groups.query.filter_by(group_id=group_id).first()
+        group = query_one_filtered(Groups,id=group_id)
 
         if group:
             # Create a dictionary with group details
-            group_details = {"group_id": group.group_id, "title": group.title}
+            group_details = {"id": group.id, "title": group.title}
             return jsonify(
                 {
                     "status": "success",
@@ -109,7 +109,7 @@ def update_group(group_id):
         if "title" not in data:
             return jsonify({"error": "Missing 'title' in request"}), 400
 
-        group = Groups.query.get(group_id)
+        group = query_one_filtered(Groups,id=group_id)
 
         if not group:
             return (
@@ -135,10 +135,9 @@ def update_group(group_id):
         return jsonify({"error": str(error)}), 400
 
 
-
-
-@groups.route("/<group_id>/members/<user_id>", methods=["DELETE"])
-def remove_group_member(group_id, user_id):
+# Define the route to remove a user from a group
+@groups.route("/<string:group_id>/members/<string:user_id>", methods=["DELETE"])
+def remove_user_from_group(group_id, user_id):
     """
     Remove a user from a group.
 
@@ -149,23 +148,29 @@ def remove_group_member(group_id, user_id):
     Returns:
     tuple: A tuple containing response message and status code.
     """
-    # Retrieve the group and user from the database
-    group = Groups.query.get(group_id)
-    user = Users.query.get(user_id)
+    try:
+        # Check if the group and user exist in the database
+        group = query_one_filtered(Groups,id=group_id)
+        user = query_one_filtered(Users,id=user_id)
 
-    # Check if the group and user exist
-    if group is None or user is None:
-        return jsonify({"error": "Group or user not found"}), 404
+        if group is None or user is None:
+            return jsonify({"message": "Group or user not found"}), 404
 
-    # Check if the user is a member of the group
-    if user not in group.members:
-        return jsonify({"error": "User is not a member of the group"}), 400
+        user_groups=user.user_groups
+        if group_id not in [group.id for group in user_groups ]:
+            return jsonify({"error":"forbidden","message":"User is not a member of this group"}),403
 
-    # Remove the user from the group
-    group.members.remove(user)
-    db.session.commit()
+        for key,group in enumerate(user.user_groups):
+            if group_id==group.id:
+                user_groups.pop(key)
+        user.user_groups=user_groups
+        user.update()
 
-    return jsonify({"message": "User removed from group successfully"}), 200
+        return jsonify({"message": "User removed from group successfully","group_id":group_id}), 204
+
+    except Exception as e:
+        # Handle any potential errors
+        return jsonify({"error": str(e)}), 500
 
 
 @groups.route("/create", methods=["POST"])
@@ -228,17 +233,16 @@ def delete_group(group_id):
     """
     try:
         # Retrieve the group from the database
-        group = Groups.query.get(group_id)
+        group = query_one_filtered(Groups,id=group_id)
 
         # Check if the group exists
         if group is None:
             return jsonify({"error": "Group not found"}), 404
 
         # Delete the group from the database
-        db.session.delete(group)
-        db.session.commit()
+        group.delete()
 
-        return jsonify({"message": "Group deleted successfully"})
+        return jsonify({"message": "Group deleted successfully"}),204
 
     except Exception as e:
         # Handle any exceptions that may occur during deletion
