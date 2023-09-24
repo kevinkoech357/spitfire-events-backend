@@ -114,7 +114,7 @@ def update_user():
 )
 def create_interest(event_id):
     """Create interest in an event"""
-    user_id = is_logged_in(session)
+    is_logged_in(session)
     try:
         user = query_one_filtered(Users, id=user_id)
         event = query_one_filtered(Events, id=event_id)
