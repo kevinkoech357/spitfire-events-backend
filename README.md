@@ -170,12 +170,3 @@ The API will return 5 error types, with diffreent descriptions when requests fai
 
 <br>
 
-## **UML CLASS DIAGRAM**
-
----
-
-## Limitations and Assumptions
-
-## Authors
-
-- [@Godhanded](https://github.com/Godhanded)
