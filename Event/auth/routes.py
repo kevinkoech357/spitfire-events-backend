@@ -27,6 +27,7 @@ CLIENT_ID_3 = os.environ.get("CLIENT_ID_3")
 
 # ...
 
+
 @auth.route("/", methods=["POST"])
 def register_or_login():
     """Register and Login route for google authentication"""
@@ -68,10 +69,12 @@ def register_or_login():
         jsonify(
             {
                 "message": "success",
-                "data": {"id":user.id,
-                            "email": user.email,
-                            "name": user.name,
-                            "avatar": user.avatar,},
+                "data": {
+                    "id": user.id,
+                    "email": user.email,
+                    "name": user.name,
+                    "avatar": user.avatar,
+                },
             }
         ),
         200,
@@ -85,19 +88,21 @@ def see_sess():
     get the details of current logged in user
     """
     # lets get the user id of the currently loggedin user using is_logged_in helper
-    user_id = is_logged_in(session) 
+    user_id = is_logged_in(session)
     try:
         user = query_one_filtered(Users, id=user_id)
         return (
             jsonify(
-            {
-                "message": "success",
-                "data": {"id":user.id,
-                            "email": user.email,
-                            "name": user.name,
-                            "avatar": user.avatar,},
-            }
-        ),
+                {
+                    "message": "success",
+                    "data": {
+                        "id": user.id,
+                        "email": user.email,
+                        "name": user.name,
+                        "avatar": user.avatar,
+                    },
+                }
+            ),
             200,
         )
     except Exception:

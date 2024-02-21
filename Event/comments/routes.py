@@ -42,11 +42,11 @@ def add_images(comment_id):
             ), 201
         except Exception as error:
             return jsonify(
-                    {
-                        "message": "Error: image data could not be saved",
-                        "error": "Bad Request"
-                    }
-                ),  400
+                {
+                    "message": "Error: image data could not be saved",
+                    "error": "Bad Request",
+                }
+            ), 400
     # GET images
     try:
         comment = query_one_filtered(Comments, id=comment_id)
@@ -54,15 +54,13 @@ def add_images(comment_id):
         return jsonify(
             {
                 "message": "all images successfully fetched",
-                "data": [image.format() for image in all_images]
-                if all_images
-                else [],
+                "data": [image.format() for image in all_images] if all_images else [],
             }
         ), 200
     except Exception as error:
         return jsonify(
-                    {
-                        "message": "An error occured while fetching all images",
-                        "error": "Bad Request"
-                    }
-            ), 400
+            {
+                "message": "An error occured while fetching all images",
+                "error": "Bad Request",
+            }
+        ), 400

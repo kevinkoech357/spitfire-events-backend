@@ -13,7 +13,6 @@ from Event.models.events import Events
 users = Blueprint("users", __name__, url_prefix="/api/users")
 
 
-
 # Checked
 # GET /api/users/<string:user_id>: Get user profile
 @users.route("/")
@@ -182,8 +181,8 @@ def delete_user_interest(event_id):
         # else return error
         return jsonify(
             {
-                "message": "user has not previously shown interest", 
-                "error": "Nothing to delete"
+                "message": "user has not previously shown interest",
+                "error": "Nothing to delete",
             }
         ), 403
     except Exception as error:

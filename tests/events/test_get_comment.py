@@ -3,6 +3,7 @@ import requests
 
 BASE_URI = "http://spitfire.onrender.com/api/events/"
 
+
 class TestGetComments(unittest.TestCase):
     def setUp(self):
         # Create an event to get comments for
@@ -14,25 +15,16 @@ class TestGetComments(unittest.TestCase):
             "start_time": "10:00:00",
             "end_date": "2023-09-22",
             "end_time": "12:00:00",
-            "thumbnail": "thumbnail-url-1"
+            "thumbnail": "thumbnail-url-1",
         }
         response = requests.post(BASE_URI, json=self.event_data)
         self.event_id = response.json()["data"]["id"]
 
         # Create some comments for the event
         self.comment_data = [
-            {
-                "user_id": "user-1",
-                "body": "This is comment 1"
-            },
-            {
-                "user_id": "user-2",
-                "body": "This is comment 2"
-            },
-            {
-                "user_id": "user-3",
-                "body": "This is comment 3"
-            }
+            {"user_id": "user-1", "body": "This is comment 1"},
+            {"user_id": "user-2", "body": "This is comment 2"},
+            {"user_id": "user-3", "body": "This is comment 3"},
         ]
 
     def test_empty_comments_success(self):
@@ -50,11 +42,12 @@ class TestGetComments(unittest.TestCase):
         # Check if the response data is empty
         self.assertEqual(len(response_data["data"]), 0)
 
-
     def test_get_comments_success(self):
         for comment in self.comment_data:
-            response = requests.post(BASE_URI + self.event_id + "/comments", json=comment)
-    
+            response = requests.post(
+                BASE_URI + self.event_id + "/comments", json=comment
+            )
+
         # Make a GET request to get comments for an event
         response = requests.get(BASE_URI + self.event_id + "/comments")
 
@@ -71,9 +64,12 @@ class TestGetComments(unittest.TestCase):
 
         # Check the data inthe comment are same as expected
         for i in range(len(self.comment_data)):
-            self.assertEqual(response_data["data"][i]["user_id"], self.comment_data[i]["user_id"])
-            self.assertEqual(response_data["data"][i]["body"], self.comment_data[i]["body"])
-
+            self.assertEqual(
+                response_data["data"][i]["user_id"], self.comment_data[i]["user_id"]
+            )
+            self.assertEqual(
+                response_data["data"][i]["body"], self.comment_data[i]["body"]
+            )
 
     def test_get_comments_not_found(self):
         # Make a GET request to get comments for a non-existent event

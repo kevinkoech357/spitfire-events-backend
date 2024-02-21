@@ -5,8 +5,6 @@
 # # from Event.models.base_model import BaseModel
 
 
-
-
 # class EventThumbnail(db.Model):
 #     """
 #         Model Schema for EventThumbnail.

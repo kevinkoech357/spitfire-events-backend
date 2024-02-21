@@ -3,6 +3,7 @@ import requests
 
 BASE_URI = "http://spitfire.onrender.com/api/events/"
 
+
 class TestAllEvents(unittest.TestCase):
     def test_all_events_success(self):
         # Make a GET request to retrieve all events
@@ -34,5 +35,5 @@ class TestAllEvents(unittest.TestCase):
         pass
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

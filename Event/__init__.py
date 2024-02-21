@@ -44,7 +44,7 @@ def create_app():
     sess.init_app(app)
 
     # Load Swagger content from the file
-    with open('auth_swagger.yaml', 'r') as file:
+    with open("auth_swagger.yaml", "r") as file:
         swagger_config = yaml.load(file, Loader=yaml.FullLoader)
 
     # Initialize Flasgger with the loaded Swagger configuration

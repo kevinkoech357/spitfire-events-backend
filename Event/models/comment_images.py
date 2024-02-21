@@ -62,7 +62,7 @@
 #             "comment_id": self.comment_id,
 #             "image_id": self.image_id
 #         }
-    
+
 # comment_images = db.Table('comment_images',
 #     comment_id = db.Column(db.String(60), db.ForeignKey("comments.id"), primary_key=True, nullable=False),
 #     image_id = db.Column(db.String(60), db.ForeignKey("images.id"), primary_key=True, nullable=False)

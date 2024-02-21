@@ -29,7 +29,7 @@ class Images(BaseModel):
     __tablename__ = "images"
 
     url = db.Column(db.String(255), nullable=False)
-    
+
     def __init__(self, url):
         """_summary_
 
@@ -59,5 +59,5 @@ class Images(BaseModel):
             "id": self.id,
             "url": self.url,
             "created_at": self.created_at,
-            "updated_at": self.updated_at
+            "updated_at": self.updated_at,
         }

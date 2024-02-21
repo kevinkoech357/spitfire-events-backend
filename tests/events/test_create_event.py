@@ -3,11 +3,12 @@ import requests
 
 BASE_URI = "http://spitfire.onrender.com/api/events/"
 
+
 class TestCreateEvent(unittest.TestCase):
     def test_create_event_success(self):
         # Define event details in JSON format
         event_data = {
-            "title":"New Event",
+            "title": "New Event",
             "description": "Event Description",
             "thumbnail": "Event Thumbnail",
             "location": "Event Location",
@@ -15,7 +16,7 @@ class TestCreateEvent(unittest.TestCase):
             "start_time": "06:52:10",
             "end_time": "06:57:10",
             "start_date": "2000-07-11",
-            "end_date": "1999-06-11"
+            "end_date": "1999-06-11",
         }
 
         # Make a POST request to create a new event
@@ -30,7 +31,7 @@ class TestCreateEvent(unittest.TestCase):
         created_event = response_data["data"]
         self.assertEqual(created_event["title"], "New Event")
         self.assertEqual(created_event["description"], "Event Description")
-        #self.assertEqual(created_event["thumbnail"], "Event Thumbnail")
+        # self.assertEqual(created_event["thumbnail"], "Event Thumbnail")
         self.assertEqual(created_event["location"], "Event Location")
         self.assertEqual(created_event["creator_id"], "user1_id")
         self.assertEqual(created_event["start_time"], "06:52:10")
@@ -49,7 +50,7 @@ class TestCreateEvent(unittest.TestCase):
             "start_time": "06:52:10",
             "end_time": "06:57:10",
             "start_date": "2000-07-11",
-            "end_date": "1999-06-11"
+            "end_date": "1999-06-11",
         }
 
         # Make a POST request with missing data
@@ -74,7 +75,7 @@ class TestCreateEvent(unittest.TestCase):
             "start_time": "",
             "end_time": "",
             "start_date": "",
-            "end_date": ""
+            "end_date": "",
         }
 
         # Make a POST request with empty fields
@@ -99,7 +100,7 @@ class TestCreateEvent(unittest.TestCase):
             "start_time": None,
             "end_time": None,
             "start_date": None,
-            "end_date": None
+            "end_date": None,
         }
 
         # Make a POST request with null fields
@@ -113,7 +114,6 @@ class TestCreateEvent(unittest.TestCase):
         self.assertEqual(response_data["error"], "Bad Request")
         self.assertEqual(response_data["message"], "Missing required fields")
 
-
     def test_long_fields(self):
         # Define event details with long fields (e.g., long title, creator_id, etc.)
         event_data = {
@@ -125,12 +125,12 @@ class TestCreateEvent(unittest.TestCase):
             "start_time": "06:52:10",
             "end_time": "06:57:10",
             "start_date": "2000-07-11",
-            "end_date": "1999-06-11"
+            "end_date": "1999-06-11",
         }
 
         # Make a POST request with long fields
         response = requests.post(BASE_URI, json=event_data)
-        
+
         # Check if the response status code is 400 (Bad Request)
         self.assertEqual(response.status_code, 400)
 
@@ -138,7 +138,6 @@ class TestCreateEvent(unittest.TestCase):
         response_data = response.json()
         self.assertEqual(response_data["error"], "Bad Request")
         self.assertEqual(response_data["message"], "Invalid field length")
-
 
     def test_negative_time_duration(self):
         # Define event details with negative time duration
@@ -151,7 +150,7 @@ class TestCreateEvent(unittest.TestCase):
             "start_time": "06:52:10",
             "end_time": "06:51:10",
             "start_date": "2000-07-11",
-            "end_date": "1999-06-11"
+            "end_date": "1999-06-11",
         }
 
         # Make a POST request with negative time duration
@@ -166,5 +165,5 @@ class TestCreateEvent(unittest.TestCase):
         self.assertEqual(response_data["message"], "Invalid time duration")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

@@ -6,9 +6,22 @@ from datetime import datetime
 
 
 # Association table between Events and Images
-event_thumbnail = db.Table('event_thumbnail',
-    db.Column('image_id', db.String(60), db.ForeignKey("images.id"), primary_key=True, nullable=False),
-    db.Column('event_id', db.String(60), db.ForeignKey("events.id"), primary_key=True, nullable=False)
+event_thumbnail = db.Table(
+    "event_thumbnail",
+    db.Column(
+        "image_id",
+        db.String(60),
+        db.ForeignKey("images.id"),
+        primary_key=True,
+        nullable=False,
+    ),
+    db.Column(
+        "event_id",
+        db.String(60),
+        db.ForeignKey("events.id"),
+        primary_key=True,
+        nullable=False,
+    ),
 )
 
 
@@ -27,19 +40,21 @@ class Events(BaseModel):
     # Define columns for the Events table
     title = db.Column(db.String(60), unique=True, nullable=False)
     description = db.Column(db.String(225), nullable=False)
-    creator_id = db.Column(
-        db.String(60), db.ForeignKey("users.id"), nullable=False
-    )
+    creator_id = db.Column(db.String(60), db.ForeignKey("users.id"), nullable=False)
     location = db.Column(db.String(1024), nullable=False)
     start_date = db.Column(db.Date(), nullable=False)
     start_time = db.Column(db.Time(), nullable=False)
     end_date = db.Column(db.Date(), nullable=False)
     end_time = db.Column(db.Time(), nullable=False)
-    comments = db.relationship("Comments", backref=db.backref("event", lazy=True), 
-                                cascade="all, delete-orphan")
-    thumbnail = db.relationship("Images", secondary=event_thumbnail,
-                                backref=db.backref("event", lazy=True), lazy="subquery")
-
+    comments = db.relationship(
+        "Comments", backref=db.backref("event", lazy=True), cascade="all, delete-orphan"
+    )
+    thumbnail = db.relationship(
+        "Images",
+        secondary=event_thumbnail,
+        backref=db.backref("event", lazy=True),
+        lazy="subquery",
+    )
 
     def __init__(
         self,
@@ -103,5 +118,5 @@ class Events(BaseModel):
             "end_date": format(self.end_date),
             "end_time": format(self.end_time),
             "created_at": format(self.created_at),
-            "updated_at": format(self.updated_at)
+            "updated_at": format(self.updated_at),
         }

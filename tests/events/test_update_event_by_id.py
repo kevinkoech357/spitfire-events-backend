@@ -3,18 +3,19 @@ import requests
 
 BASE_URI = "http://spitfire.onrender.com/api/events/"
 
+
 class TestUpdateEventById(unittest.TestCase):
     def setUp(self):
         # Create some events to be retrieved
         self.event_data = {
-            "title":"New Event",
+            "title": "New Event",
             "description": "Event Description",
             "location": "Event Location",
             "creator_id": "user1_id",
             "start_time": "06:52:10",
             "end_time": "06:57:10",
             "start_date": "2000-07-11",
-            "end_date": "1999-06-11"
+            "end_date": "1999-06-11",
         }
 
         # Make a POST request to create a new event and store the event id
@@ -25,14 +26,14 @@ class TestUpdateEventById(unittest.TestCase):
     def test_update_event_by_id_success(self):
         # Make a PUT request to update an event by id
         updated_data = {
-            "title":"Updated Event",
+            "title": "Updated Event",
             "description": "Updated Event Description",
             "location": "Updated Event Location",
             "creator_id": "user1_id",
             "start_time": "14:00:00",
             "end_time": "16:00:00",
             "start_date": "2023-09-23",
-            "end_date": "2023-09-24"
+            "end_date": "2023-09-24",
         }
         response = requests.put(BASE_URI + self.event_id, json=updated_data)
 
@@ -56,14 +57,13 @@ class TestUpdateEventById(unittest.TestCase):
         self.assertEqual(expected_event["end_date"], returned_event["end_date"])
         self.assertEqual(expected_event["end_time"], returned_event["end_time"])
 
-
     def test_update_event_by_id_not_found(self):
         # Make a PUT request to update an event by an invalid id
         updated_data = {
             "title": "Updated Event",
             "description": "Updated Event Description",
-            "location": "Updated Event Location"
-        }   
+            "location": "Updated Event Location",
+        }
         event_id = "invalid-id"
         response = requests.put(BASE_URI + event_id, json=updated_data)
 
@@ -75,7 +75,6 @@ class TestUpdateEventById(unittest.TestCase):
         self.assertEqual(response_data["error"], "Not found")
         self.assertEqual(response_data["message"], "Event not found")
 
-
     def test_empty_fields(self):
         # Define event details with empty fields (e.g., empty title, creator_id, etc.)
         event_data = {
@@ -86,7 +85,7 @@ class TestUpdateEventById(unittest.TestCase):
             "start_time": "",
             "end_time": "",
             "start_date": "",
-            "end_date": ""
+            "end_date": "",
         }
 
         # Make a POST request with empty fields
@@ -110,7 +109,7 @@ class TestUpdateEventById(unittest.TestCase):
             "start_time": None,
             "end_time": None,
             "start_date": None,
-            "end_date": None
+            "end_date": None,
         }
 
         # Make a POST request with null fields
@@ -124,7 +123,6 @@ class TestUpdateEventById(unittest.TestCase):
         self.assertEqual(response_data["error"], "Bad Request")
         self.assertEqual(response_data["message"], "Missing required fields")
 
-
     def test_long_fields(self):
         # Define event details with long fields (e.g., long title, creator_id, etc.)
         event_data = {
@@ -135,12 +133,12 @@ class TestUpdateEventById(unittest.TestCase):
             "start_time": "06:52:10",
             "end_time": "06:57:10",
             "start_date": "2000-07-11",
-            "end_date": "1999-06-11"
+            "end_date": "1999-06-11",
         }
 
         # Make a POST request with long fields
         response = requests.put(BASE_URI, json=event_data)
-        
+
         # Check if the response status code is 400 (Bad Request)
         self.assertEqual(response.status_code, 400)
 
@@ -148,7 +146,6 @@ class TestUpdateEventById(unittest.TestCase):
         response_data = response.json()
         self.assertEqual(response_data["error"], "Bad Request")
         self.assertEqual(response_data["message"], "Invalid field length")
-
 
     def test_negative_time_duration(self):
         # Define event details with negative time duration
@@ -160,7 +157,7 @@ class TestUpdateEventById(unittest.TestCase):
             "start_time": "06:52:10",
             "end_time": "06:51:10",
             "start_date": "2000-07-11",
-            "end_date": "1999-06-11"
+            "end_date": "1999-06-11",
         }
 
         # Make a POST request with negative time duration
@@ -173,7 +170,6 @@ class TestUpdateEventById(unittest.TestCase):
         response_data = response.json()
         self.assertEqual(response_data["error"], "Bad Request")
         self.assertEqual(response_data["message"], "Invalid time duration")
-
 
     def test_update_event_by_id_error(self):
         # skip this test for now
@@ -190,5 +186,5 @@ class TestUpdateEventById(unittest.TestCase):
         self.assertEqual(response_data["message"], "Something went wrong")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

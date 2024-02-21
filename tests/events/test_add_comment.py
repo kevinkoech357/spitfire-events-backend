@@ -3,6 +3,7 @@ import requests
 
 BASE_URI = "http://spitfire.onrender.com/api/events/"
 
+
 class TestAddComments(unittest.TestCase):
     def setUp(self):
         # Create an event to add comments to
@@ -14,18 +15,17 @@ class TestAddComments(unittest.TestCase):
             "start_time": "10:00:00",
             "end_date": "2023-09-22",
             "end_time": "12:00:00",
-            "thumbnail": "thumbnail-url-1"
+            "thumbnail": "thumbnail-url-1",
         }
         response = requests.post(BASE_URI, json=self.event_data)
         self.event_id = response.json()["data"]["id"]
 
     def test_add_comment_success(self):
         # Make a POST request to add a comment to an event
-        comment_data = {
-            "user_id": "user-1",
-            "body": "This is a comment"
-        }
-        response = requests.post(BASE_URI + self.event_id + "/comments", json=comment_data)
+        comment_data = {"user_id": "user-1", "body": "This is a comment"}
+        response = requests.post(
+            BASE_URI + self.event_id + "/comments", json=comment_data
+        )
 
         # Check if the response status code is 200 (OK)
         self.assertEqual(response.status_code, 200)
@@ -40,10 +40,10 @@ class TestAddComments(unittest.TestCase):
 
     def test_add_comment_missing_fields(self):
         # Make a POST request to add a comment to an event with missing fields
-        comment_data = {    
-            "user_id": "user-1"
-        }
-        response = requests.post(BASE_URI + self.event_id + "/comments", json=comment_data)
+        comment_data = {"user_id": "user-1"}
+        response = requests.post(
+            BASE_URI + self.event_id + "/comments", json=comment_data
+        )
 
         # Check if the response status code is 400 (Bad Request)
         self.assertEqual(response.status_code, 400)
@@ -56,11 +56,10 @@ class TestAddComments(unittest.TestCase):
 
     def test_add_comment_invalid_event_id(self):
         # Make a POST request to add a comment to an invalid event ID
-        comment_data = {
-            "user_id": "user-1",
-            "body": "This is a comment"
-        }
-        response = requests.post(BASE_URI + "invalid-event-id/comments", json=comment_data)
+        comment_data = {"user_id": "user-1", "body": "This is a comment"}
+        response = requests.post(
+            BASE_URI + "invalid-event-id/comments", json=comment_data
+        )
 
         # Check if the response status code is 404 (Not Found)
         self.assertEqual(response.status_code, 404)
@@ -80,11 +79,10 @@ class TestAddComments(unittest.TestCase):
         __import__("routes").Comments.insert = mock_insert
 
         # Make a POST request to add a comment to an event
-        comment_data = {
-            "user_id": "user-1",
-            "body": "This is a comment"
-        }
-        response = requests.post(BASE_URI + self.event_id + "/comments", json=comment_data)
+        comment_data = {"user_id": "user-1", "body": "This is a comment"}
+        response = requests.post(
+            BASE_URI + self.event_id + "/comments", json=comment_data
+        )
 
         # Check if the response status code is 400 (Bad Request)
         self.assertEqual(response.status_code, 400)
@@ -130,7 +128,7 @@ class TestAddComments(unittest.TestCase):
             "start_time": "10:00:00",
             "end_date": "2023-09-22",
             "end_time": "12:00:00",
-            "thumbnail": "thumbnail-url-2"
+            "thumbnail": "thumbnail-url-2",
         }
         response = requests.post(BASE_URI, json=event_data)
         event_id = response.json()["data"]["id"]

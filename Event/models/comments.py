@@ -6,10 +6,24 @@ from Event.models.base_model import BaseModel
 
 
 # Association table between Comments and Images
-comment_images = db.Table('comment_images',
-    db.Column('comment_id', db.String(60), db.ForeignKey("comments.id"), primary_key=True,nullable=False),
-    db.Column('image_id', db.String(60), db.ForeignKey("images.id"), primary_key=True, nullable=False)
+comment_images = db.Table(
+    "comment_images",
+    db.Column(
+        "comment_id",
+        db.String(60),
+        db.ForeignKey("comments.id"),
+        primary_key=True,
+        nullable=False,
+    ),
+    db.Column(
+        "image_id",
+        db.String(60),
+        db.ForeignKey("images.id"),
+        primary_key=True,
+        nullable=False,
+    ),
 )
+
 
 class Comments(BaseModel):
     """
@@ -57,9 +71,13 @@ class Comments(BaseModel):
 
     # event = db.relationship("Events", backref=db.backref("comments", lazy=True))
     # user = db.relationship("Users", backref=db.backref("comments", lazy=True))
-    images = db.relationship("Images", backref="comments",
-                             secondary=comment_images, lazy="dynamic",
-                             cascade="all, delete")
+    images = db.relationship(
+        "Images",
+        backref="comments",
+        secondary=comment_images,
+        lazy="dynamic",
+        cascade="all, delete",
+    )
 
     def __init__(self, event_id, user_id, body):
         """Initialize the Comment object"""

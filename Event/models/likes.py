@@ -12,7 +12,7 @@
 #     """
 
 #     __tablename__ = "likes"
-    
+
 #     comment_id = db.Column(db.String(60), db.ForeignKey("comments.id"), primary_key=True, nullable=False)
 #     user_id = db.Column(db.String(60), db.ForeignKey("users.id"), primary_key=True, nullable=False)
 

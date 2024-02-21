@@ -3,11 +3,12 @@ import requests
 
 BASE_URI = "http://spitfire.onrender.com/api/events/"
 
+
 class TestGetEventById(unittest.TestCase):
     def setUp(self):
         # Create some events to be retrieved
         self.event_data = {
-            "title":"New Event",
+            "title": "New Event",
             "description": "Event Description",
             "thumbnail": "Event Thumbnail",
             "location": "Event Location",
@@ -15,14 +16,13 @@ class TestGetEventById(unittest.TestCase):
             "start_time": "06:52:10",
             "end_time": "06:57:10",
             "start_date": "2000-07-11",
-            "end_date": "1999-06-11"
+            "end_date": "1999-06-11",
         }
 
         # Make a POST request to create a new event and store the event id
         response = requests.post(BASE_URI, json=self.event_data)
         self.event_data = response.json()["data"]
         self.event_id = response.json()["data"]["id"]
-
 
     def test_get_event_by_id_success(self):
         # Make a GET request to retrieve an event by id

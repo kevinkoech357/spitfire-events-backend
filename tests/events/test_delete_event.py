@@ -3,11 +3,12 @@ import requests
 
 BASE_URI = "http://spitfire.onrender.com/api/events/"
 
+
 class TestUpdateEventById(unittest.TestCase):
     def setUp(self):
         # Create some events to be retrieved
         self.event_data = {
-            "title":"New Event",
+            "title": "New Event",
             "description": "Event Description",
             "thumbnail": "Event Thumbnail",
             "location": "Event Location",
@@ -15,7 +16,7 @@ class TestUpdateEventById(unittest.TestCase):
             "start_time": "06:52:10",
             "end_time": "06:57:10",
             "start_date": "2000-07-11",
-            "end_date": "1999-06-11"
+            "end_date": "1999-06-11",
         }
 
         # Make a POST request to create a new event and store the event id
@@ -43,14 +44,13 @@ class TestUpdateEventById(unittest.TestCase):
         self.assertEqual(response_data["error"], "Not found")
         self.assertEqual(response_data["message"], "Event not found")
 
-
     def test_update_event_by_id_not_found(self):
         # Make a PUT request to update an event by an invalid id
         updated_data = {
             "title": "Updated Event",
             "description": "Updated Event Description",
-            "location": "Updated Event Location"
-        }   
+            "location": "Updated Event Location",
+        }
         event_id = "invalid-id"
         response = requests.put(BASE_URI + event_id)
 
